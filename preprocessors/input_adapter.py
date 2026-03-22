@@ -21,4 +21,3 @@ def preprocess_image(img):
     embedding = processor(images=img, return_tensors="pt")
     return {"text": text, "embedding": embedding}
 
-# Usage in app: modality = detect_modality(uploaded_file)
