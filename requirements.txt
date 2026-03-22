@@ -11,3 +11,4 @@ pandas
 sentence-transformers 
 transformers 
 accelerate
+python-dotenv
