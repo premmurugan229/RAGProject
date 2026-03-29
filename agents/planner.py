@@ -1,5 +1,3 @@
-
-from langchain_openai import ChatOpenAI
 from typing import List
 from dataclasses import dataclass
 
@@ -11,16 +9,14 @@ class Task:
 
 class PlannerAgent:
     def __init__(self, config):
-        self.llm = ChatOpenAI(api_key=config.OPENAI_API_KEY, model=config.LLM_MODEL)
-    
-    def plan(self, query: str) -> List[Task]:
-        prompt = f"""
-        Decompose query into subtasks:
-        "{query}"
-        
-        Return JSON: [{{"type": "RETRIEVE", "description": "..."}}, ...]
-        """
-        response = self.llm.invoke(prompt)
-        # Parse response (simplified)
-        tasks = [Task("RETRIEVE", f"Fetch data for {query}")]
-        return tasks
+        from transformers import pipeline
+
+        self.pipe = pipeline(
+            "text2text-generation",
+            model="google/flan-t5-base",
+            max_length=512
+        )
+
+    def plan(self, query):
+        response = self.pipe(f"Break this into tasks: {query}")
+        return [{"task": response[0]["generated_text"]}]

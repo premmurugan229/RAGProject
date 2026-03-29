@@ -1,3 +1,4 @@
 .env
 *.png
 myenv
+__pycache__
