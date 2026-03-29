@@ -1,14 +1,12 @@
-from langchain_openai import ChatOpenAI
+from transformers import pipeline
 
 class OrchestratorAgent:
     def __init__(self, config):
-        self.llm = ChatOpenAI(api_key=config.OPENAI_API_KEY, model=config.LLM_MODEL)
-    
+        self.pipe = pipeline(
+            "text2text-generation",
+            model="google/flan-t5-base",
+            max_length=512
+        )
+       
     def generate(self, context: str, query: str) -> str:
-        prompt = f"""
-        Context: {context}
-        Query: {query}
-        
-        Answer with citations:
-        """
-        return self.llm.invoke(prompt).content
+        return self.pipe(query)[0]["generated_text"]
